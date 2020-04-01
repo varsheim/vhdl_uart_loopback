@@ -1,7 +1,12 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity top_module is
+	generic (
+		g_CLKS_PER_UART_BIT : integer := 104     -- Needs to be set correctly
+	);
 	port (
 		i_Switch : in STD_LOGIC_VECTOR(1 downto 0);
 		i_UartRX : in STD_LOGIC;
@@ -11,6 +16,10 @@ entity top_module is
 		o_UartTX : out STD_LOGIC;
 		o_SegEn : out STD_LOGIC_VECTOR(2 downto 0);
 		o_SegLED : out STD_LOGIC_VECTOR(7 downto 0)
+		
+		-- simulation only
+		--o_SwitchBCHcnt : OUT std_logic_vector(11 downto 0);
+		--o_SwitchBCHcntReceived : out STD_LOGIC_VECTOR(11 downto 0)
 	);
 end top_module;
 
@@ -62,7 +71,7 @@ begin
 	-- Instantiate UART RX
 	UARTRX : entity work.uart_rx
 		generic map (
-			g_CLKS_PER_BIT => 104)            -- 12,000,000 / 115,200
+			g_CLKS_PER_BIT => g_CLKS_PER_UART_BIT)            -- 12,000,000 / 115,200
 		port map (
 			i_Clk      => i_Clk,
 			i_RXSerial => i_UartRX,
@@ -72,7 +81,7 @@ begin
 	-- Instantiate UART TX
 	UARTTX : entity work.uart_tx
 		generic map (
-			g_CLKS_PER_BIT => 104)            -- 12,000,000 / 115,200
+			g_CLKS_PER_BIT => g_CLKS_PER_UART_BIT)            -- 12,000,000 / 115,200
 		port map (
 			i_Clk      => i_Clk,
 			i_TXDV     => w_TXDV,
@@ -168,6 +177,10 @@ begin
 	
 	o_SegEn <= not(r_CurrentSegment);
 	o_LED <= r_LED_1;
+	
+	-- simulation only
+	--o_SwitchBCHcnt <= r_SwitchBCHcnt;
+	--o_SwitchBCHcntReceived <= r_SwitchBCHcntReceived;
 	
 end Behavioral;
 
