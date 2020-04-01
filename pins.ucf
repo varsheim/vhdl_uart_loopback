@@ -17,4 +17,4 @@ NET "o_UartTX"          		LOC = P32   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DR
 
 NET "i_Switch[0]"          LOC = P80   | PULLUP  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
 NET "i_Switch[1]"          LOC = P79   | PULLUP  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
-NET "i_UartRX"          	LOC = P31   | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;
+NET "i_UartRX"          	LOC = P31   | PULLUP  | IOSTANDARD = LVCMOS33 | SLEW = SLOW | DRIVE = 12;

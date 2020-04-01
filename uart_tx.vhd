@@ -24,6 +24,7 @@ architecture Behavioral of uart_tx is
 	signal r_BitIndex : integer range 0 to 7 := 0;  -- 8 Bits Total
 	signal r_TXByte : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
 	signal r_TXDone : STD_LOGIC := '0';
+	signal r_TXDV : STD_LOGIC := '0';
 	
 begin
 	p_UART_TX : process (i_Clk)
@@ -36,6 +37,7 @@ begin
 					r_TXDone <= '0';
 					r_ClkCount <= 0;
 					r_BitIndex <= 0;
+					r_TXDV <= i_TXDV;
 
 					if i_TXDV = '1' then
 						r_TXByte <= i_TXByte;

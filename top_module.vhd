@@ -43,6 +43,8 @@ architecture Behavioral of top_module is
 	
 	signal r_SwitchBCHcntReceived : STD_LOGIC_VECTOR(11 downto 0) := "000000000000";
 	
+	signal r_TXDataReady : STD_LOGIC := '0';
+	
 begin
 	-- Instantiate Debounce Filter
 	DebounceInst1 : entity work.debounce_switch
@@ -116,8 +118,7 @@ begin
 				end if;
 				
 				-- send the youngest 8 bits of counter via UART
-				w_TXByte <= r_SwitchBCHcnt(7 downto 0);
-				w_TXDV <= '1';
+				r_TXDataReady <= '1';
 			end if;
 			
 			-- switch 2 is released
@@ -125,24 +126,24 @@ begin
 				r_SwitchBCHcnt(11 downto 0) <= "000000000000";
 				
 				-- send the youngest 8 bits of counter via UART
+				r_TXDataReady <= '1';
+			end if;
+			
+			if r_TXDataReady = '1' then
 				w_TXByte <= r_SwitchBCHcnt(7 downto 0);
 				w_TXDV <= '1';
+				r_TXDataReady <= '0';
+			else
+				w_TXDV <= '0';
 			end if;
-		end if;
-	end process p_Register;
-	
-	p_Uart : process (i_Clk) is
-	begin
-		if rising_edge(i_Clk) then
-
-			
 			
 			-- set new data to display when it is received
 			if w_RXDV = '1' then
 				r_SwitchBCHcntReceived(7 downto 0) <= w_RXByte;
 			end if;
+			
 		end if;
-	end process p_Uart;
+	end process p_Register;
 	
 	p_Display : process (i_Clk) is
 	begin
